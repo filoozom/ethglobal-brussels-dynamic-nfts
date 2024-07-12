@@ -1,0 +1,2 @@
+- The subscription create page was quite buggy. I had to create a fresh Chrome profile and reinstall MetaMask for it to work.
+- I get a "Invalid code location" error, but no reason as to why that may be. The code is accessible, more information is necessary from Chainlink's side.
