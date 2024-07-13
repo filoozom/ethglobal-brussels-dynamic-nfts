@@ -11,6 +11,7 @@ docs/
 # Dotenv file
 .env
 .env.*
+!.env.sample
 
 # Lib
 /lib
