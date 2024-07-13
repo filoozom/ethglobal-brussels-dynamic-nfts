@@ -5,4 +5,5 @@ libs = ["lib"]
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
 
+# For the function's source code
 fs_permissions = [{ access = "read", path = "./assets" }]
