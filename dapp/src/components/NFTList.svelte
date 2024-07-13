@@ -58,16 +58,18 @@
           </p>
         {/if}
 
-        <p>
-          <a
-            href="{openSea}/{nftAddress}/{nft.tokenId}"
-            target="_blank"
-            class="underline"
-            title={nft.hash}
-          >
-            OpenSea
-          </a>
-        </p>
+        {#if nft.hash}
+          <p>
+            <a
+              href="{openSea}/{nftAddress}/{nft.tokenId}"
+              target="_blank"
+              class="underline"
+              title={nft.hash}
+            >
+              OpenSea
+            </a>
+          </p>
+        {/if}
 
         {#if nft.hash}
           {#await loadMetadata(nft.hash) then metadata}
