@@ -1,8 +1,8 @@
 import { derived, readable } from "svelte/store";
-import { type Log } from "ethers";
 
 // Lib
 import { nftContract } from "../lib/provider";
+import type { ContractEventPayload } from "ethers";
 
 // Types
 type NFT = {
@@ -29,17 +29,22 @@ export const nftMap = readable<Record<string, NFT>>({}, (_, update) => {
     tokenId: bigint,
     seed: bigint,
     hash: string,
-    { transactionHash }: Log
+    { log }: ContractEventPayload
   ) => {
-    addNfts({ tokenId, seed, hash, chainlinkTransactionHash: transactionHash });
+    addNfts({
+      tokenId,
+      seed,
+      hash,
+      chainlinkTransactionHash: log.transactionHash,
+    });
   };
 
   const renderingListener = async (
     tokenId: bigint,
     seed: bigint,
-    { transactionHash }: Log
+    { log }: ContractEventPayload
   ) => {
-    addNfts({ tokenId, seed, transactionHash });
+    addNfts({ tokenId, seed, transactionHash: log.transactionHash });
   };
 
   nftContract.on("TokenRendered", renderedListener);
