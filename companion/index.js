@@ -8,8 +8,8 @@ import {
 } from "npm:multiformats/codecs/raw";
 
 // Generation script
-const { generateImage, getImageConfig } = await import(
-  "https://cdn.gisthostfor.me/filoozom-4XDZ64lBpn-generate.js"
+const { generateImage, getImageConfig, generateMetadata } = await import(
+  "https://cdn.gisthostfor.me/filoozom-tbPpmAb40f-generate.js"
 );
 
 const provider = getDefaultProvider(Deno.env.get("RPC_URL"));
@@ -109,13 +109,17 @@ const renderToken = async (tokenId, seed, hash) => {
   // Convert seed to number
   seed = Number(seed);
 
+  // Arguments
+  const args = [];
+  const bytesArgs = [tokenId, seed];
+
   // Generate image
   const config = getImageConfig();
   const canvas = generateImage(
     createCanvas(config.width, config.height),
     newRNG(seed),
-    [],
-    [tokenId, seed]
+    args,
+    bytesArgs
   );
 
   // Render image
@@ -124,29 +128,52 @@ const renderToken = async (tokenId, seed, hash) => {
   const blob = new Blob([buffer], { type: "image/png" });
 
   // Calculate CID
-  const renderHash = await sha256.digest(bytes);
-  const cid = CID.create(1, rawCode, renderHash);
+  const imageHash = await sha256.digest(bytes);
+  const imageCID = CID.create(1, rawCode, imageHash);
+
+  // Create the metadata
+  const metadata = generateMetadata(newRNG(seed), args, bytesArgs);
+  metadata.image = "ipfs://" + imageCID.toString();
+
+  // Calculate the metadata CID
+  const metadataString = JSON.stringify(metadata);
+  const text = rawEncode(new TextEncoder().encode(metadataString));
+  const metadataHash = await sha256.digest(text);
+  const metadataCID = CID.create(1, rawCode, metadataHash);
 
   // Compare hash
-  if (hash && hash !== cid.toString()) {
+  if (hash && hash !== metadataCID.toString()) {
     console.error("CIDs not match:", {
       tokenId,
       seed,
       expected: hash,
-      actual: cid,
+      actual: metadataCID,
     });
-    return;
+    // return;
   }
 
   // Upload image if they match or there's no hash
-  const { Hash } = await uploadToLighthouse(blob);
-  if (Hash !== cid.toString()) {
-    console.error("CIDs not match in Lighthouse upload:", {
+  const { Hash: uploadedImageHash } = await uploadToLighthouse(blob);
+  if (uploadedImageHash !== imageCID.toString()) {
+    console.error("Image CIDs do not match in Lighthouse upload:", {
+      tokenId,
+      seed,
+      expected: metadataCID.toString(),
+      actual: uploadedImageHash,
+    });
+  }
+
+  // Upload image if they match or there's no hash
+  const { Hash: uploadedMetadataHash } = await uploadToLighthouse(
+    new Blob([metadataString], { type: "application/json" })
+  );
+  if (uploadedMetadataHash !== metadataCID.toString()) {
+    console.error("Image CIDs do not match in Lighthouse upload:", {
       tokenId,
       seed,
       contract: hash,
-      expected: cid.toString(),
-      actual: Hash,
+      expected: metadataCID.toString(),
+      actual: uploadedMetadataHash,
     });
   }
 };
@@ -161,7 +188,7 @@ contract.on("TokenRendered", async (tokenId, seed, hash) => {
 });
 
 // Fetch previous events
-const events = await contract.queryFilter("TokenRendered", -5_000);
+const events = await contract.queryFilter("TokenRendered", -50_000);
 for (const { args } of events) {
   await renderToken(args[0], args[1], args[2]);
 }

@@ -477,6 +477,8 @@
   },
   "remote": {
     "https://cdn.gisthostfor.me/filoozom-4XDZ64lBpn-generate.js": "507beeafb0e6e0ca8d990e584cececa16813a403dc92f636d4aa3c7f73a7a58c",
+    "https://cdn.gisthostfor.me/filoozom-tbPpmAb40f-generate.js": "a33788086be63040942d59305e3a33085645f730a13b3d25fdb068309c8c2692",
+    "https://cdn.gisthostfor.me/filoozom-teuPXIUiuA-generate.js": "e2730b476a2a90b9b26c3e572539031a8d5af5e98a76dcf5110cf2f460a898aa",
     "https://deno.land/std@0.106.0/encoding/base64.ts": "eecae390f1f1d1cae6f6c6d732ede5276bf4b9cd29b1d281678c054dc5cc009e",
     "https://deno.land/x/canvas@v1.4.1/deps.ts": "e956026d98094946166e06d7b799290b732db015813870d84e04e33ab88e98f3",
     "https://deno.land/x/canvas@v1.4.1/mod.ts": "a4e16972647ceafef58612a377a218372454c99d2c9da615a132694597114f80",

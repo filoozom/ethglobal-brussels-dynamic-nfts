@@ -4,8 +4,8 @@ const { createCanvas } = await import("https://deno.land/x/canvas/mod.ts");
 const { CID } = await import("npm:multiformats/cid");
 const { sha256 } = await import("npm:multiformats/hashes/sha2");
 const { encode, code } = await import("npm:multiformats/codecs/raw");
-const { generateImage, getImageConfig } = await import(
-  "https://cdn.gisthostfor.me/filoozom-4XDZ64lBpn-generate.js"
+const { generateImage, getImageConfig, generateMetadata } = await import(
+  "https://cdn.gisthostfor.me/filoozom-tbPpmAb40f-generate.js"
 );
 
 // Args
@@ -40,9 +40,18 @@ const canvas = generateImage(
 );
 const bytes = encode(canvas.toBuffer("image/png"));
 
-// Calculate CID
-const hash = await sha256.digest(bytes);
-const cid = CID.create(1, code, hash);
+// Calculate the image CID
+const imageHash = await sha256.digest(bytes);
+const imageCID = CID.create(1, code, imageHash);
+
+// Create the metadata
+const metadata = generateMetadata(newRNG(seed), args, bytesArgs);
+metadata.image = "ipfs://" + imageCID.toString();
+
+// Calculate the metadata CID
+const text = new TextEncoder().encode(JSON.stringify(metadata));
+const metadataHash = await sha256.digest(text);
+const metadataCID = CID.create(1, code, metadataHash);
 
 // Return CID as ABI encoded string
-return Functions.encodeString(cid);
+return Functions.encodeString(metadataCID.toString());
