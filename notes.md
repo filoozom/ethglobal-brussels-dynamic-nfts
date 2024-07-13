@@ -2,3 +2,4 @@
 - I get a "Invalid code location" error, but no reason as to why that may be. The code is accessible, more information is necessary from Chainlink's side.
 - Chainlink doesn't yet support remote source code, which I lost half a day on
 - Chainlink doesn't support args in imports (but it still works with `simulateScript`?)
+  - Error: `TypeError: Requires net access to "MY_URL", run again with the --allow-net flag`
