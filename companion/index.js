@@ -102,7 +102,7 @@ const uploadToLighthouse = async (blob) => {
 const renderToken = async (tokenId, seed, hash) => {
   console.log(
     `Rendering token ${tokenId} with seed ${seed}${
-      hash && ` and expected hash ${hash}`
+      hash ? ` and expected hash ${hash}` : ""
     }`
   );
 
