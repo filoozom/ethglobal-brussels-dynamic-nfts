@@ -9,7 +9,6 @@
   import * as imageConfig from "https://cdn.gisthostfor.me/filoozom-4XDZ64lBpn-generate.js";
 
   // Bind
-  let canvas: HTMLCanvasElement;
   let error = false;
   let rendered: string | undefined;
 

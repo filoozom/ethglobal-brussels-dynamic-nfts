@@ -8,7 +8,7 @@
 <div class="grid md:grid-cols-2 xl:grid-cols-3">
   {#each $nfts as nft}
     <div class="group w-full relative">
-      <RenderToken {...nft} />
+      <RenderToken tokenId={nft.tokenId} seed={nft.seed} hash={nft.hash} />
 
       <div
         class="h-full opacity-0 group-hover:opacity-100 duration-300 absolute inset-x-0 bottom-0 flex justify-center text-xl items-center text-black bg-gray-200 bg-opacity-75 flex-col gap-4 text-center"
