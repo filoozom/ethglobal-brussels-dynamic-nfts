@@ -13,7 +13,7 @@ contract GenerativeNFT is FunctionsClient, ConfirmedOwner, ERC721 {
     using FunctionsRequest for FunctionsRequest.Request;
 
     // Chainlink
-    uint32 private constant GAS_LIMIT = 250_000;
+    uint32 private constant GAS_LIMIT = 100_000;
     uint64 private subscriptionId;
     bytes32 private immutable donID;
     string public source;
@@ -78,7 +78,7 @@ contract GenerativeNFT is FunctionsClient, ConfirmedOwner, ERC721 {
 
         // Args
         string[] memory args = new string[](1);
-        args[0] = source;
+        args[0] = script;
         req.setArgs(args);
 
         // Send the request
