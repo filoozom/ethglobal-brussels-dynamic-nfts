@@ -4,6 +4,7 @@ export const chainId = 421614;
 export const rpc =
   "https://arb-sepolia.g.alchemy.com/v2/GPR_qF9l_vj-iDb1Kdg3cjDBB-ktJ7Lt";
 export const explorer = "https://sepolia-explorer.arbitrum.io";
+export const openSea = "https://testnets.opensea.io/assets/arbitrum-sepolia";
 
 export const chainSpec = {
   chainId,
@@ -18,7 +19,7 @@ export const chainSpec = {
 
 export const provider = getDefaultProvider(rpc);
 
-export const nftAddress = "0x33A19605B4A4b7F141C998bf293A35805Ec9F728";
+export const nftAddress = "0x9640D28e20445CCcEd345FF0ab20560AD067f9a1";
 export const nftContract = new Contract(
   nftAddress,
   [

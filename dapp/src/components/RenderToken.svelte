@@ -11,6 +11,7 @@
   // Bind
   let error = false;
   let rendered: string | undefined;
+  let imageUrl: string | undefined;
 
   // Config
   export let tokenId: bigint;
@@ -26,6 +27,21 @@
     rendered = source.toDataURL("image/png");
   };
 
+  const loadNFT = async () => {
+    try {
+      const response = await fetch(
+        `https://gateway.lighthouse.storage/ipfs/${hash}`
+      );
+      const metadata = await response.json();
+      imageUrl = metadata.image.replace(
+        "ipfs://",
+        "https://gateway.lighthouse.storage/ipfs/"
+      );
+    } catch (err) {
+      error = true;
+    }
+  };
+
   const onload = (element: HTMLElement) => {
     const listener = () => {
       error = true;
@@ -37,13 +53,17 @@
 
   $: if (!hash || error) {
     render();
+  } else {
+    loadNFT();
   }
 </script>
 
-<img
-  src={rendered || `https://gateway.lighthouse.storage/ipfs/${hash}`}
-  alt="Token {tokenId}"
-  use:onload
-  class:opacity-50={!hash}
-  class:opacity-75={error}
-/>
+{#if imageUrl || rendered}
+  <img
+    src={rendered || imageUrl}
+    alt="Token {tokenId}"
+    use:onload
+    class:opacity-50={!hash}
+    class:opacity-75={error}
+  />
+{/if}
