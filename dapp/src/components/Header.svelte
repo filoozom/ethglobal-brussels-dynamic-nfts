@@ -13,8 +13,7 @@
         { chainId: "0x" + chainId.toString(16) },
       ]);
     } catch (switchError: any) {
-      console.log(switchError);
-      if (switchError.code === 4902) {
+      if (switchError.error.code === 4902) {
         try {
           await (provider as any).send("wallet_addEthereumChain", [
             {
@@ -22,7 +21,8 @@
               chainId: "0x" + chainId.toString(16),
             },
           ]);
-        } catch (_err) {
+        } catch (addError: any) {
+          console.error(addError);
           return;
         }
       } else {
