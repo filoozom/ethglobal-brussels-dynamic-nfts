@@ -56,5 +56,5 @@ export const nftMap = readable<Record<string, NFT>>({}, (_, update) => {
 });
 
 export const nfts = derived(nftMap, ($nftMap) => {
-  return Object.values($nftMap).sort((a, b) => Number(a.tokenId - b.tokenId));
+  return Object.values($nftMap).sort((a, b) => Number(b.tokenId - a.tokenId));
 });
