@@ -4,9 +4,7 @@ const { createCanvas } = await import("https://deno.land/x/canvas/mod.ts");
 const { CID } = await import("npm:multiformats/cid");
 const { sha256 } = await import("npm:multiformats/hashes/sha2");
 const { encode, code } = await import("npm:multiformats/codecs/raw");
-const { generateImage, getImageConfig } = await import(
-  "https://cdn.gisthostfor.me/filoozom-4XDZ64lBpn-generate.js"
-);
+const { generateImage, getImageConfig } = await import(args[0]);
 
 // Args
 const tokenId = parseInt(bytesArgs[0]);
