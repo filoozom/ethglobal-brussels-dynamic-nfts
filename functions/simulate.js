@@ -6,8 +6,8 @@ import {
   decodeResult,
 } from "@chainlink/functions-toolkit";
 
-const tokenId = 123;
-const seed = 1720797695;
+const tokenId = 4;
+const seed = 1720869576;
 
 const source = await readFile("function.js", "utf-8");
 const bytesArgs = [
