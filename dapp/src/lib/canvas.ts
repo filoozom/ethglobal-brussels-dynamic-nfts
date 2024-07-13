@@ -78,6 +78,8 @@ export const renderCanvasKit = async (
 
   // Copy to canvas
   const copy = document.createElement("canvas");
+  copy.width = config.width;
+  copy.height = config.height;
   await copyCanvasKitToCanvas(canvas, copy);
 
   return { canvas: copy, blob };
