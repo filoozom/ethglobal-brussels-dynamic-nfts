@@ -14,3 +14,6 @@ docs/
 
 # Lib
 /lib
+
+# Assets (copied from ../functions)
+/assets/function.js
