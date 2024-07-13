@@ -1,5 +1,9 @@
 # Dynamic NFTs
 
+## Deployed version
+
+https://ethglobal-brussels-dynamic-nfts.vercel.app/
+
 ## Documentation
 
 Documentation can be found in each subfolder:
