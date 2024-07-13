@@ -1,8 +1,7 @@
 import { derived, readable } from "svelte/store";
-import { Contract } from "ethers";
 
 // Lib
-import { provider } from "../lib/provider";
+import { nftContract } from "../lib/provider";
 
 // Types
 type NFT = {
@@ -10,58 +9,6 @@ type NFT = {
   seed: bigint;
   hash?: string;
 };
-
-// Contract
-const contract = new Contract(
-  "0xcbeeA39747FdEd002e02641dE595f1457d353787",
-  [
-    {
-      anonymous: false,
-      inputs: [
-        {
-          indexed: true,
-          internalType: "uint256",
-          name: "tokenId",
-          type: "uint256",
-        },
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "seed",
-          type: "uint256",
-        },
-      ],
-      name: "RenderingToken",
-      type: "event",
-    },
-    {
-      anonymous: false,
-      inputs: [
-        {
-          indexed: true,
-          internalType: "uint256",
-          name: "tokenId",
-          type: "uint256",
-        },
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "seed",
-          type: "uint256",
-        },
-        {
-          indexed: false,
-          internalType: "string",
-          name: "hash",
-          type: "string",
-        },
-      ],
-      name: "TokenRendered",
-      type: "event",
-    },
-  ],
-  provider
-);
 
 export const nftMap = readable<Record<string, NFT>>({}, (_, update) => {
   const addNfts = (...add: NFT[]) => {
@@ -88,12 +35,12 @@ export const nftMap = readable<Record<string, NFT>>({}, (_, update) => {
     addNfts({ tokenId, seed });
   };
 
-  contract.on("TokenRendered", renderedListener);
-  contract.on("RenderingToken", renderingListener);
+  nftContract.on("TokenRendered", renderedListener);
+  nftContract.on("RenderingToken", renderingListener);
 
   // Fetch previous events
   (async () => {
-    const events = await contract.queryFilter("TokenRendered");
+    const events = await nftContract.queryFilter("TokenRendered");
     const previous = events.map(({ args }: any) => ({
       tokenId: args[0],
       seed: args[1],
@@ -103,8 +50,8 @@ export const nftMap = readable<Record<string, NFT>>({}, (_, update) => {
   })();
 
   return () => {
-    contract.off("TokenRendered", renderedListener);
-    contract.off("RenderingToken", renderingListener);
+    nftContract.off("TokenRendered", renderedListener);
+    nftContract.off("RenderingToken", renderingListener);
   };
 });
 
