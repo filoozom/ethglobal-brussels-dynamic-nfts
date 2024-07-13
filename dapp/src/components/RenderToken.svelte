@@ -1,8 +1,7 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-
   // Lib
-  import { copyCanvas, renderCanvas } from "../lib/canvas";
+  import { renderCanvas } from "../lib/canvas";
+  import { loadMetadata } from "../lib/metadata";
 
   // Image config
   // @ts-expect-error external link
@@ -28,11 +27,12 @@
   };
 
   const loadNFT = async () => {
+    if (!hash) {
+      return;
+    }
+
     try {
-      const response = await fetch(
-        `https://gateway.lighthouse.storage/ipfs/${hash}`
-      );
-      const metadata = await response.json();
+      const metadata = await loadMetadata(hash);
       imageUrl = metadata.image.replace(
         "ipfs://",
         "https://gateway.lighthouse.storage/ipfs/"

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { loadMetadata } from "../lib/metadata";
   import { explorer, nftAddress, openSea } from "../lib/provider";
   import { formatAddress } from "../lib/utils";
   import { nfts } from "../stores/nfts";
@@ -67,6 +68,17 @@
             OpenSea
           </a>
         </p>
+
+        {#if nft.hash}
+          {#await loadMetadata(nft.hash) then metadata}
+            {#if metadata.attributes}
+              Traits:<br />
+              {#each metadata.attributes as attribute}
+                - {attribute.trait_type}: {attribute.value}<br />
+              {/each}
+            {/if}
+          {/await}
+        {/if}
       </div>
     </div>
   {/each}
