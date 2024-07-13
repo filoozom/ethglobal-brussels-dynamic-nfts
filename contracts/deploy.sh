@@ -1,5 +1,8 @@
 source .env
 
+# TODO: Minify the function first
+cp ../functions/function.js assets/function.js
+
 forge script \
     --chain $CHAIN \
     script/GenerativeNFT.s.sol:GenerativeNFTScript \

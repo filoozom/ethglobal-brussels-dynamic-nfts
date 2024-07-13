@@ -13,7 +13,7 @@ contract GenerativeNFT is FunctionsClient, ConfirmedOwner, ERC721 {
     using FunctionsRequest for FunctionsRequest.Request;
 
     // Chainlink
-    uint32 private constant GAS_LIMIT = 50_000;
+    uint32 private constant GAS_LIMIT = 250_000;
     uint64 private subscriptionId;
     bytes32 private immutable donID;
     string public source;
@@ -22,6 +22,7 @@ contract GenerativeNFT is FunctionsClient, ConfirmedOwner, ERC721 {
     // IPFS
     mapping(uint256 => string) private tokenHashes;
     mapping(bytes32 => uint256) private requestIds;
+    mapping(uint256 => uint256) public seeds;
 
     // NFT
     uint256 private currentTokenId;
@@ -31,7 +32,8 @@ contract GenerativeNFT is FunctionsClient, ConfirmedOwner, ERC721 {
     error PendingTokenUri();
 
     // Events
-    event TokenRendered(uint256 indexed tokenId, string hash);
+    event RenderingToken(uint256 indexed tokenId, uint256 seed);
+    event TokenRendered(uint256 indexed tokenId, uint256 seed, string hash);
 
     // NOTE: Would love for Chainlink to support ipfs:// sources, so that
     // one could build a fully contained script and push it on IPFS instead
@@ -60,15 +62,18 @@ contract GenerativeNFT is FunctionsClient, ConfirmedOwner, ERC721 {
     function sendRequest(uint256 tokenId) private {
         FunctionsRequest.Request memory req;
         req.initializeRequest(
-            FunctionsRequest.Location.Remote,
+            FunctionsRequest.Location.Inline,
             FunctionsRequest.CodeLanguage.JavaScript,
             source
         );
 
+        // Seed, could also be VRF
+        uint256 seed = block.timestamp;
+
         // Bytes args
         bytes[] memory bytesArgs = new bytes[](2);
         bytesArgs[0] = abi.encodePacked(tokenId);
-        bytesArgs[1] = abi.encodePacked(block.timestamp);
+        bytesArgs[1] = abi.encodePacked(seed);
         req.setBytesArgs(bytesArgs);
 
         // Args
@@ -86,6 +91,8 @@ contract GenerativeNFT is FunctionsClient, ConfirmedOwner, ERC721 {
 
         // Link the request ID to the token ID
         requestIds[requestId] = tokenId;
+        emit RenderingToken(tokenId, seed);
+        seeds[tokenId] = seed;
     }
 
     function fulfillRequest(
@@ -99,7 +106,7 @@ contract GenerativeNFT is FunctionsClient, ConfirmedOwner, ERC721 {
 
         string memory hash = string(response);
         tokenHashes[tokenId] = hash;
-        emit TokenRendered(tokenId, hash);
+        emit TokenRendered(tokenId, seeds[tokenId], hash);
     }
 
     function mint() public {
