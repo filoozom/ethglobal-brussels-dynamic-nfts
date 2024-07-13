@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { explorer } from "../lib/provider";
+  import { explorer, nftAddress, openSea } from "../lib/provider";
   import { formatAddress } from "../lib/utils";
   import { nfts } from "../stores/nfts";
   import RenderToken from "./RenderToken.svelte";
@@ -56,6 +56,17 @@
             </a>
           </p>
         {/if}
+
+        <p>
+          <a
+            href="{openSea}/{nftAddress}/{nft.tokenId}"
+            target="_blank"
+            class="underline"
+            title={nft.hash}
+          >
+            OpenSea
+          </a>
+        </p>
       </div>
     </div>
   {/each}
