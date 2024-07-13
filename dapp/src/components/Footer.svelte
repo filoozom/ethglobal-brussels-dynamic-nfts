@@ -10,8 +10,12 @@
     href="{explorer}/address/{nftAddress}"
     target="_blank"
     class="underline"
-    title={nftAddress}
+    title={nftAddress}>{formatAddress(nftAddress)}</a
+  >, deployed on
+  <a href="https://arbitrum.io/" target="_blank" class="underline"
+    >Arbitrum Sepolia</a
+  >, using
+  <a href="https://www.blockscout.com/" target="_blank" class="underline"
+    >Blockscout</a
   >
-    {formatAddress(nftAddress)}
-  </a>
 </div>

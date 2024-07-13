@@ -1,3 +1,5 @@
+getImageConfig: () => ({ width: number });
+
 export const getImageConfig = () => ({
   width: 900,
   height: 900,
