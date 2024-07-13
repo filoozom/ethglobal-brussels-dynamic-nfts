@@ -1,13 +1,13 @@
 import { Contract, getDefaultProvider } from "ethers";
 
-export const chainId = 11155111;
+export const chainId = 421614;
 export const rpc =
-  "https://eth-sepolia.g.alchemy.com/v2/GPR_qF9l_vj-iDb1Kdg3cjDBB-ktJ7Lt";
-export const explorer = "https://eth-sepolia.blockscout.com/";
+  "https://arb-sepolia.g.alchemy.com/v2/GPR_qF9l_vj-iDb1Kdg3cjDBB-ktJ7Lt";
+export const explorer = "https://sepolia-explorer.arbitrum.io";
 
 export const chainSpec = {
   chainId,
-  chainName: "Sepolia",
+  chainName: "Arbitrum Sepolia",
   rpcUrls: [rpc],
   blockExplorerUrls: [explorer],
   nativeCurrency: {
@@ -18,7 +18,7 @@ export const chainSpec = {
 
 export const provider = getDefaultProvider(rpc);
 
-export const nftAddress = "0xcbeeA39747FdEd002e02641dE595f1457d353787";
+export const nftAddress = "0x33A19605B4A4b7F141C998bf293A35805Ec9F728";
 export const nftContract = new Contract(
   nftAddress,
   [
