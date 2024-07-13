@@ -15,3 +15,11 @@ export const newRNG = (seed: number) => (min: number, max?: number) => {
   const value = ((temp = temp ^ (temp >>> 15)) >>> 0) / 4294967296;
   return Math.floor(value * (max - min + 1) + min);
 };
+
+export const formatAddress = (address: string, characters = 6) => {
+  return (
+    address.substring(0, characters + 2) +
+    ".." +
+    address.substring(address.length - characters, address.length)
+  );
+};

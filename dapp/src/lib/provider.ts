@@ -3,11 +3,13 @@ import { Contract, getDefaultProvider } from "ethers";
 export const chainId = 11155111;
 export const rpc =
   "https://eth-sepolia.g.alchemy.com/v2/GPR_qF9l_vj-iDb1Kdg3cjDBB-ktJ7Lt";
+export const explorer = "https://eth-sepolia.blockscout.com/";
+
 export const chainSpec = {
   chainId,
   chainName: "Sepolia",
   rpcUrls: [rpc],
-  blockExplorerUrls: ["https://sepolia.etherscan.io/"],
+  blockExplorerUrls: [explorer],
   nativeCurrency: {
     symbol: "ETH",
     decimals: 18,

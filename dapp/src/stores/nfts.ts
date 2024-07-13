@@ -1,4 +1,5 @@
 import { derived, readable } from "svelte/store";
+import { type Log } from "ethers";
 
 // Lib
 import { nftContract } from "../lib/provider";
@@ -7,17 +8,18 @@ import { nftContract } from "../lib/provider";
 type NFT = {
   tokenId: bigint;
   seed: bigint;
+  transactionHash?: string;
   hash?: string;
+  chainlinkTransactionHash?: string;
 };
 
 export const nftMap = readable<Record<string, NFT>>({}, (_, update) => {
-  const addNfts = (...add: NFT[]) => {
+  const addNfts = (...add: (Partial<NFT> & { tokenId: bigint })[]) => {
     update((nfts) => {
       const copy = { ...nfts };
       for (const nft of add) {
-        if (!copy[nft.tokenId.toString()]?.hash) {
-          copy[nft.tokenId.toString()] = nft;
-        }
+        const key = nft.tokenId.toString();
+        copy[key] = { ...(copy[key] || {}), ...nft };
       }
       return copy;
     });
@@ -26,13 +28,18 @@ export const nftMap = readable<Record<string, NFT>>({}, (_, update) => {
   const renderedListener = async (
     tokenId: bigint,
     seed: bigint,
-    hash: string
+    hash: string,
+    { transactionHash }: Log
   ) => {
-    addNfts({ tokenId, seed, hash });
+    addNfts({ tokenId, seed, hash, chainlinkTransactionHash: transactionHash });
   };
 
-  const renderingListener = async (tokenId: bigint, seed: bigint) => {
-    addNfts({ tokenId, seed });
+  const renderingListener = async (
+    tokenId: bigint,
+    seed: bigint,
+    { transactionHash }: Log
+  ) => {
+    addNfts({ tokenId, seed, transactionHash });
   };
 
   nftContract.on("TokenRendered", renderedListener);
@@ -41,10 +48,22 @@ export const nftMap = readable<Record<string, NFT>>({}, (_, update) => {
   // Fetch previous events
   (async () => {
     const events = await nftContract.queryFilter("TokenRendered");
-    const previous = events.map(({ args }: any) => ({
+    const previous = events.map(({ args, transactionHash }: any) => ({
       tokenId: args[0],
       seed: args[1],
       hash: args[2],
+      chainlinkTransactionHash: transactionHash,
+    }));
+    addNfts(...previous);
+  })();
+
+  // Fetch previous events
+  (async () => {
+    const events = await nftContract.queryFilter("RenderingToken");
+    const previous = events.map(({ args, transactionHash }: any) => ({
+      tokenId: args[0],
+      seed: args[1],
+      transactionHash,
     }));
     addNfts(...previous);
   })();
